@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile | SkillSwap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #111;
+      border-bottom: 1px solid #333;
+    }
+
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover {
+      color: #ddd;
+    }
+
+    .profile-wrapper {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dashboard-container {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .dashboard-card {
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .dashboard-card h2 {
+      margin-bottom: 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      text-align: center;
+    }
+
+    .info-item {
+      margin-bottom: 20px;
+    }
+
+    .info-label {
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 5px;
+    }
+
+    .info-input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      background-color: #1a1a1a;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      background-color: #fff;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      transition: background-color 0.3s, transform 0.3s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">SkillSwap_</div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="requests.html">Requests</a>
+      </div>
+      <div class="profile-wrapper">
+        <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic" id="topProfilePic">
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-card">
+      <h2>Edit Profile</h2>
+
+      <div class="info-item">
+        <div class="info-label">Full Name</div>
+        <input class="info-input" type="text" id="name" placeholder="Enter your name">
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">Skills Offered</div>
+        <input class="info-input" type="text" id="skillsOffered" placeholder="e.g., Python, UI/UX">
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">Skills Wanted</div>
+        <input class="info-input" type="text" id="skillsWanted" placeholder="e.g., Marketing, Design">
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">Location</div>
+        <input class="info-input" type="text" id="location" placeholder="e.g., Delhi, India">
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">Availability</div>
+        <select class="info-input" id="availability">
+          <option value="Weekdays">Weekdays</option>
+          <option value="Weekends">Weekends</option>
+          <option value="Full Time">Full Time</option>
+          <option value="Part Time">Part Time</option>
+        </select>
+      </div>
+
+      <div class="info-item">
+        <div class="info-label">Profile Status</div>
+        <select class="info-input" id="status">
+          <option value="Public">Public</option>
+          <option value="Private">Private</option>
+        </select>
+      </div>
+
+      <div class="button-group">
+        <button class="btn" id="saveBtn">Save</button>
+        <button class="btn" onclick="window.location.reload()">Discard</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const userData = {
+        name: document.getElementById('name').value,
+        skillsOffered: document.getElementById('skillsOffered').value.split(',').map(s => s.trim()),
+        skillsWanted: document.getElementById('skillsWanted').value.split(',').map(s => s.trim()),
+        location: document.getElementById('location').value,
+        availability: [document.getElementById('availability').value],
+        status: document.getElementById('status').value
+      };
+
+      try {
+        const res = await fetch('http://localhost:3000/api/user/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(userData)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          alert('Profile updated!');
+          window.location.href = 'dashboard.html';
+        } else {
+          alert('Update failed: ' + (result.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Network error');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Node.js dependencies
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# Environment variables (if you create any in future)
+.env
+
+# Firebase emulator (if ever used)
+.firebase/
+
+# MacOS or system files
+.DS_Store
+Thumbs.db

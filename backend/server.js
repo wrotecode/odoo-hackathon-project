@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
-// CORS Middleware (manually set headers)
+// Allow CORS for development (if frontend served separately)
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // allow all origins
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
@@ -16,18 +16,17 @@ app.use((req, res, next) => {
 // Parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static HTML files
+// Serve static files from the 'views' directory
 app.use(express.static(path.join(__dirname, 'views')));
 
-// Simulated user database
+// Simulated in-memory user database
 const users = [];
 
-// Serve welcome page (optional)
+// Serve main pages
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'welcome.html'));
 });
 
-// Routes for HTML pages (optional if using Live Server)
 app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
@@ -36,11 +35,17 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
+app.get('/explore', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'explore.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'dashboard.html')); // If dashboard.html exists
+});
+
 // Signup handler
 app.post('/signup', (req, res) => {
-  console.log("➡️ Received signup request");
   const { username, email, password } = req.body;
-  console.log(req.body);
 
   const exists = users.find(u => u.email === email);
   if (exists) {
@@ -48,20 +53,18 @@ app.post('/signup', (req, res) => {
   }
 
   users.push({ username, email, password });
-  console.log("✅ Users:", users);
+  console.log("✅ New user signed up:", { username, email });
 
-  res.send(`<script>alert("Signup successful!"); window.location.href = "http://127.0.0.1:5500/views/login.html";</script>`);
+  res.send(`<script>alert("Signup successful!"); window.location.href = "/login";</script>`);
 });
 
 // Login handler
 app.post('/login', (req, res) => {
-  console.log("➡️ Received login request");
   const { email, password } = req.body;
-  console.log(req.body);
 
   const user = users.find(u => u.email === email && u.password === password);
   if (user) {
-    res.send(`<script>alert("Login successful!"); window.location.href = "http://127.0.0.1:5500/views/dashboard.html";</script>`);
+    res.send(`<script>alert("Login successful!"); window.location.href = "/dashboard";</script>`);
   } else {
     res.send(`<script>alert("Invalid credentials."); window.history.back();</script>`);
   }

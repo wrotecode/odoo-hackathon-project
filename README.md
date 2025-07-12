@@ -1,4 +1,4 @@
-# Odoo Hackathon Project
+# skill swap platform
 
 ## Team Name:
 Chill(y) Coders

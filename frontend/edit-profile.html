@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkillSwap | Dashboard</title>
-  <link rel="icon" href=""C:\Users\ANUSHKA\OneDrive\Pictures\Screenshots\skillswap.png"" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile | SkillSwap</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
   <style>
     * {
@@ -61,6 +60,7 @@
     .profile-wrapper {
       width: 40px;
       height: 40px;
+      flex-shrink: 0;
       overflow: hidden;
       border-radius: 50%;
       border: 2px solid #fff;
@@ -70,6 +70,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .dashboard-container {
@@ -91,6 +92,7 @@
       margin-bottom: 20px;
       font-family: 'Orbitron', sans-serif;
       font-size: 1.4rem;
+      text-align: center;
     }
 
     .info-item {
@@ -104,9 +106,39 @@
       margin-bottom: 5px;
     }
 
-    .info-value {
+    .info-input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      background-color: #1a1a1a;
+      color: #fff;
       font-size: 1rem;
-      padding-left: 5px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .btn {
+      background-color: #fff;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      transition: background-color 0.3s, transform 0.3s;
+      flex: 1;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -126,65 +158,84 @@
 
   <div class="dashboard-container">
     <div class="dashboard-card">
-      <h2>Your Profile</h2>
+      <h2>Edit Profile</h2>
 
       <div class="info-item">
         <div class="info-label">Full Name</div>
-        <div class="info-value" id="nameDisplay">Loading...</div>
+        <input class="info-input" type="text" id="name" placeholder="Enter your name">
       </div>
 
       <div class="info-item">
         <div class="info-label">Skills Offered</div>
-        <div class="info-value" id="skillsOfferedDisplay">Loading...</div>
+        <input class="info-input" type="text" id="skillsOffered" placeholder="e.g., Python, UI/UX">
       </div>
 
       <div class="info-item">
         <div class="info-label">Skills Wanted</div>
-        <div class="info-value" id="skillsWantedDisplay">Loading...</div>
+        <input class="info-input" type="text" id="skillsWanted" placeholder="e.g., Marketing, Design">
       </div>
 
       <div class="info-item">
         <div class="info-label">Location</div>
-        <div class="info-value" id="locationDisplay">Loading...</div>
+        <input class="info-input" type="text" id="location" placeholder="e.g., Delhi, India">
       </div>
 
       <div class="info-item">
         <div class="info-label">Availability</div>
-        <div class="info-value" id="availabilityDisplay">Loading...</div>
+        <select class="info-input" id="availability">
+          <option value="Weekdays">Weekdays</option>
+          <option value="Weekends">Weekends</option>
+          <option value="Full Time">Full Time</option>
+          <option value="Part Time">Part Time</option>
+        </select>
       </div>
 
       <div class="info-item">
         <div class="info-label">Profile Status</div>
-        <div class="info-value" id="statusDisplay">Loading...</div>
+        <select class="info-input" id="status">
+          <option value="Public">Public</option>
+          <option value="Private">Private</option>
+        </select>
+      </div>
+
+      <div class="button-group">
+        <button class="btn" id="saveBtn">Save</button>
+        <button class="btn" onclick="window.location.reload()">Discard</button>
       </div>
     </div>
   </div>
 
   <script>
-    async function fetchProfile() {
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      const userData = {
+        name: document.getElementById('name').value,
+        skillsOffered: document.getElementById('skillsOffered').value.split(',').map(s => s.trim()),
+        skillsWanted: document.getElementById('skillsWanted').value.split(',').map(s => s.trim()),
+        location: document.getElementById('location').value,
+        availability: [document.getElementById('availability').value],
+        status: document.getElementById('status').value
+      };
+
       try {
-        const res = await fetch('http://localhost:3000/api/user/me', {
-          method: 'GET',
+        const res = await fetch('http://localhost:3000/api/user/update', {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include'
+          credentials: 'include',
+          body: JSON.stringify(userData)
         });
 
-        if (!res.ok) throw new Error("Failed to fetch profile");
-
-        const user = await res.json();
-        document.getElementById('nameDisplay').textContent = user.name;
-        document.getElementById('skillsOfferedDisplay').textContent = user.skillsOffered.join(', ');
-        document.getElementById('skillsWantedDisplay').textContent = user.skillsWanted.join(', ');
-        document.getElementById('locationDisplay').textContent = user.location;
-        document.getElementById('availabilityDisplay').textContent = user.availability.join(', ');
-        document.getElementById('statusDisplay').textContent = user.status;
+        const result = await res.json();
+        if (res.ok) {
+          alert('Profile updated!');
+          window.location.href = 'dashboard.html';
+        } else {
+          alert('Update failed: ' + (result.error || 'Unknown error'));
+        }
       } catch (err) {
         console.error(err);
-        alert("Error loading profile data.");
+        alert('Network error');
       }
-    }
-
-    window.onload = fetchProfile;
+    });
   </script>
 </body>
 </html>

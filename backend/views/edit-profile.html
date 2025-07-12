@@ -148,7 +148,7 @@
     <div class="nav-right">
       <div class="nav-links">
         <a href="home.html">Home</a>
-        <a href="requests.html">Requests</a>
+        <a href="request.html">Requests</a>
       </div>
       <div class="profile-wrapper">
         <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic" id="topProfilePic">
@@ -205,37 +205,62 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('saveBtn').addEventListener('click', async () => {
-      const userData = {
-        name: document.getElementById('name').value,
-        skillsOffered: document.getElementById('skillsOffered').value.split(',').map(s => s.trim()),
-        skillsWanted: document.getElementById('skillsWanted').value.split(',').map(s => s.trim()),
-        location: document.getElementById('location').value,
-        availability: [document.getElementById('availability').value],
-        status: document.getElementById('status').value
-      };
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-      try {
-        const res = await fetch('http://localhost:3000/api/user/update', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify(userData)
-        });
+<script>
+  // Your Firebase config (replace with yours if needed)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCf_EdkKdzyIAUaBpOqwxRGIsaybiCj8PE",
+    authDomain: "skillswap-6bc59.firebaseapp.com",
+    projectId: "skillswap-6bc59",
+    storageBucket: "skillswap-6bc59.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
 
-        const result = await res.json();
-        if (res.ok) {
-          alert('Profile updated!');
-          window.location.href = 'dashboard.html';
-        } else {
-          alert('Update failed: ' + (result.error || 'Unknown error'));
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Network error');
-      }
-    });
-  </script>
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+
+    const profileData = {
+      name: document.getElementById('name').value,
+      skillsOffered: document.getElementById('skillsOffered').value.split(',').map(s => s.trim()),
+      skillsWanted: document.getElementById('skillsWanted').value.split(',').map(s => s.trim()),
+      location: document.getElementById('location').value,
+      availability: document.getElementById('availability').value,
+      status: document.getElementById('status').value,
+      email: user.email,
+      uid: user.uid
+    };
+
+    try {
+      await db.collection("users").doc(user.uid).set(profileData, { merge: true });
+      alert("Profile updated successfully!");
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Something went wrong while saving.");
+    }
+  });
+
+  // Optional: Redirect if not logged in
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
 </body>
 </html>

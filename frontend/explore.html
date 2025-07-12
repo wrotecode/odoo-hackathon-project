@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explore | SkillSwap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      scroll-behavior: smooth;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at center, #000 0%, #000 100%);
+      animation: bgFloat 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-5%, -5%); }
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .auth-buttons a {
+      text-decoration: none;
+      background: #fff;
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      margin-left: 12px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: transform 0.3s ease;
+    }
+
+    .auth-buttons a:hover {
+      transform: scale(1.05);
+      background-color: #ddd;
+    }
+
+    .section {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: #bbb;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .feature-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .feature-card {
+      background-color: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 24px;
+      width: 280px;
+      text-align: left;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .feature-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+
+    .search-bar {
+      margin: 30px 0 40px;
+      text-align: center;
+    }
+
+    .search-bar input {
+      padding: 12px 18px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      width: 90%;
+      max-width: 400px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .profile-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .profile-card {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 20px;
+      width: 280px;
+      text-align: left;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .profile-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-bottom: 12px;
+    }
+
+    .user-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .rating {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .skills {
+      font-size: 0.8rem;
+      color: #ccc;
+      margin-bottom: 12px;
+    }
+
+    .request-btn {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .pagination {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .pagination button {
+      background: #fff;
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      border: none;
+      padding: 8px 16px;
+      margin: 0 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .pagination button:hover {
+      transform: scale(1.05);
+      background: #ddd;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .feature-card,
+      .profile-card {
+        width: 90%;
+      }
+
+      .section-title {
+        font-size: 1rem;
+      }
+
+      .section-subtitle {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">SkillSwap_</div>
+    <div class="auth-buttons">
+      <a href="login.html" target="_blank">Login</a>
+      <a href="signup.html" target="_blank">Create Account</a>
+    </div>
+  </header>
+
+  <!-- Section 1: Feature Cards -->
+  <section class="section" id="features">
+    <h2 class="section-title">Explore SkillSwap</h2>
+    <p class="section-subtitle">Teach. Learn. Grow. Discover everything you can do here.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card"><h3>Skill Match</h3><p>Connect with people who have the skills you need, and who need the skills you have.</p></div>
+      <div class="feature-card"><h3>Live Collabs</h3><p>Jump into real-time rooms to teach, learn, or co-build passion projects together.</p></div>
+      <div class="feature-card"><h3>Progress Points</h3><p>Earn points for mentoring or helping others, and unlock learning perks and badges.</p></div>
+      <div class="feature-card"><h3>Learning Circles</h3><p>Form mini communities around specific skills and grow together with weekly sessions.</p></div>
+      <div class="feature-card"><h3>Track & Reflect</h3><p>Maintain a portfolio and reflect on your journey through logs and feedback.</p></div>
+      <div class="feature-card"><h3>Swap Scheduler</h3><p>Schedule sessions based on mutual availability and time zones.</p></div>
+    </div>
+  </section>
+
+  <!-- Section 2: User Database -->
+  <section class="section" id="users">
+    <h2 class="section-title">Explore Users</h2>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by name, skills offered or wanted..." oninput="applySearch()"/>
+    </div>
+
+    <div class="profile-grid" id="profileGrid"></div>
+
+    <div class="pagination">
+      <button id="prevBtn">Prev</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </section>
+
+  <script>
+    const users = [
+      { name: "Ananya Joshi", rating: 5, offers: "Canva, Design", wants: "Python", avatar: "https://i.pravatar.cc/60?u=1" },
+      { name: "Ritik Verma", rating: 4, offers: "Java, DSA", wants: "UI/UX", avatar: "https://i.pravatar.cc/60?u=2" },
+      { name: "Meera Kapoor", rating: 3, offers: "Writing", wants: "Marketing", avatar: "https://i.pravatar.cc/60?u=3" },
+      { name: "Aaravi Shah", rating: 5, offers: "Public Speaking", wants: "ML", avatar: "https://i.pravatar.cc/60?u=4" },
+      { name: "Nitin Rao", rating: 4, offers: "SQL", wants: "DevOps", avatar: "https://i.pravatar.cc/60?u=5" },
+      { name: "Ishaani Patel", rating: 3, offers: "Photography", wants: "Python", avatar: "https://i.pravatar.cc/60?u=6" },
+      { name: "Diya Sen", rating: 4, offers: "Web Dev", wants: "3D Art", avatar: "https://i.pravatar.cc/60?u=7" },
+      { name: "Kabir Sharma", rating: 5, offers: "Robotics", wants: "Finance", avatar: "https://i.pravatar.cc/60?u=8" }
+    ];
+
+    let currentPage = 1;
+    const profilesPerPage = 3;
+    let filteredUsers = [...users];
+    const isLoggedIn = false;
+
+    function displayProfiles(page) {
+      const start = (page - 1) * profilesPerPage;
+      const end = start + profilesPerPage;
+      const grid = document.getElementById("profileGrid");
+
+      const currentUsers = filteredUsers.slice(start, end);
+
+      grid.innerHTML = currentUsers.map(user => `
+        <div class="profile-card">
+          <img src="${user.avatar}" alt="Profile" />
+          <div class="user-name">${user.name}</div>
+          <div class="rating">${"★".repeat(user.rating)}${"☆".repeat(5 - user.rating)}</div>
+          <div class="skills">
+            <strong>Offers:</strong> ${user.offers}<br/>
+            <strong>Wants:</strong> ${user.wants}
+          </div>
+          <button class="request-btn" onclick="handleRequest()">Request</button>
+        </div>
+      `).join('');
+    }
+
+    function applySearch() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(query) ||
+        user.offers.toLowerCase().includes(query) ||
+        user.wants.toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      displayProfiles(currentPage);
+    }
+
+    function handleRequest() {
+      if (!isLoggedIn) {
+        window.location.href = "login.html";
+      }
+    }
+
+    document.getElementById("nextBtn").onclick = () => {
+      const maxPages = Math.ceil(filteredUsers.length / profilesPerPage);
+      if (currentPage < maxPages) {
+        currentPage++;
+        displayProfiles(currentPage);
+      }
+    };
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (currentPage > 1) {
+        currentPage--;
+        displayProfiles(currentPage);
+      }
+    };
+
+    displayProfiles(currentPage);
+  </script>
+</body>
+</html>

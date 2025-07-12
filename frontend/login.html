@@ -91,7 +91,7 @@
       try {
         await auth.signInWithEmailAndPassword(email, password);
         alert("Login successful!");
-        window.location.href = "explore.html";  // Next page after login
+        window.location.href = "edit-profile.html";  // Next page after login
       } catch (error) {
         alert("Login failed: " + error.message);
       }
